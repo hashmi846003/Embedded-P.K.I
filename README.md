@@ -160,5 +160,3 @@ pki-project/
 | [certificate-storage.md](docs/certificate-storage.md) | DB vs filesystem, key handling |
 | [database-migration.md](docs/database-migration.md) | Flat files → SQLite, bugs found along the way |
 | [ip-camera-stunnel.md](docs/ip-camera-stunnel.md) | Devices without native TLS |
-# Embedded-P.K.I
-# Embedded-P.K.I

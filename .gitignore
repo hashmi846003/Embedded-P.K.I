@@ -4,3 +4,7 @@ certs/
 data/
 *.key
 *.db
+
+# Built Go binaries (run go build in server/)
+server/certctl
+server/server
