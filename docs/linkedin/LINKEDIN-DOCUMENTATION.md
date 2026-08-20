@@ -173,6 +173,44 @@ Device IDs are derived from the scan (`bbb-a3f291`), not typed by hand — reduc
 
 ---
 
+## Real Hardware Verification (Your Screenshots)
+
+These are actual terminal captures from testing on a **BeagleBone Black** over USB Ethernet (`192.168.7.2` → server at `192.168.7.1:4433`).
+
+### Server side — certificate deploy + authentication log
+
+![Server-side mTLS success](./mtls-success-screenshot.png)
+
+What this shows:
+1. **SCP** — device cert, private key, and CA copied to `debian@192.168.7.2:~/certs/`
+2. **Server start** — `mTLS backend listening on :4433 (database: ../data/pki.db)`
+3. **Successful auth** — `AUTHENTICATED: CN=bbb-device-01-4fcad7 serial=589559860246012094737978509389740577822520449035`
+
+The earlier `TLS handshake error ... EOF` lines are normal during troubleshooting — failed attempts before the correct cert was in place.
+
+### Device side — curl with client certificate + JSON response
+
+![Device-side mTLS success](./device-mtls-success-screenshot.png)
+
+What this shows:
+1. **Certs on device** — `bbb-device-01-4fcad7.crt`, `.key`, and `ca.crt` in `/home/debian/certs/`
+2. **mTLS curl** — device presents its certificate to the backend
+3. **JSON response** from `/api/device/data`:
+
+```json
+{
+  "common_name": "bbb-device-01-4fcad7",
+  "serial": "589559860246012094737978509389740577822520449035",
+  "issuer": "Embedded-IoT-Fleet-RootCA",
+  "cert_expires": "2028-11-22T19:59:01Z",
+  "authenticated_at": "2026-08-20T20:30:59.910992279Z"
+}
+```
+
+**Use on LinkedIn:** These two screenshots are strong proof that the project works on real hardware — pair them in a carousel after the architecture diagram, or use the device-side shot as the hero image with the JSON visible.
+
+---
+
 ## Quick Demo Commands
 
 ```bash
@@ -221,16 +259,26 @@ Attach: `docs/linkedin/architecture-diagram.png`
 
 ---
 
-### Option B — Medium post (carousel: 3 diagrams)
+### Option B — Medium post (carousel: diagrams + real screenshots)
 
-**Slide 1 caption (architecture):**
-> System architecture: Root CA → mTLS server + device certs → SQLite fleet database, managed by certctl CLI.
+**Recommended carousel order (5 slides):**
+1. `architecture-diagram.png` — system overview
+2. `mtls-flow-diagram.png` — how authentication works
+3. `mtls-success-screenshot.png` — server log: `AUTHENTICATED: CN=bbb-device-01-4fcad7`
+4. `device-mtls-success-screenshot.png` — BeagleBone curl + JSON identity response
+5. `trust-onboarding-diagram.png` — trust-gated cert issuance
 
-**Slide 2 caption (mTLS flow):**
-> Every connection: TLS handshake → revocation/blacklist check → allow or deny → audit log entry.
+**Slide captions:**
 
-**Slide 3 caption (trust onboarding):**
-> Devices are scanned and scored before receiving a certificate. Risky ports (telnet, TR-069) block automatic issuance.
+**Slide 1:** Root CA → mTLS server + device certs → SQLite fleet database.
+
+**Slide 2:** Every connection: TLS handshake → revoke/blacklist check → allow or deny → audit log.
+
+**Slide 3:** Real server log — device authenticated over mTLS on port 4433.
+
+**Slide 4:** Real BeagleBone Black — curl with client cert returns device identity JSON.
+
+**Slide 5:** Devices scanned and scored before receiving a certificate.
 
 **Post text:**
 
@@ -255,7 +303,29 @@ Would love feedback from embedded and security folks — what would you add for 
 #IoTSecurity #Embedded #PKI #mTLS #CertificateManagement #Go #Linux #BeagleBoneBlack #OpenSource #CyberSecurity
 ```
 
-Attach all three images from `docs/linkedin/` as a carousel.
+Attach all five images from `docs/linkedin/` as a carousel.
+
+---
+
+### Option B2 — Short post with proof screenshot (recommended)
+
+Use the **device-side screenshot** as the main image — the JSON response is easy to read and proves it works.
+
+```
+Embedded Device PKI — tested on a real BeagleBone Black 🔐
+
+Built an open-source PKI for IoT fleets: mutual TLS, certificate lifecycle management, trust-gated onboarding, and a full audit log — backed by SQLite.
+
+Screenshot: BeagleBone presents its client cert → Go backend verifies identity → returns JSON with CN, serial, issuer, and expiry.
+
+Not a slide-deck demo. Real hardware, real certs, real mTLS.
+
+GitHub: https://github.com/hashmi846003/Embedded-P.K.I
+
+#IoT #EmbeddedSystems #PKI #mTLS #CyberSecurity #BeagleBone #GoLang #OpenSource
+```
+
+Attach: `docs/linkedin/device-mtls-success-screenshot.png`
 
 ---
 
@@ -298,9 +368,11 @@ GitHub: https://github.com/hashmi846003/Embedded-P.K.I
 
 | File | Use on LinkedIn |
 |------|-----------------|
-| `docs/linkedin/architecture-diagram.png` | Main hero / cover image |
-| `docs/linkedin/mtls-flow-diagram.png` | Carousel slide 2 — authentication |
-| `docs/linkedin/trust-onboarding-diagram.png` | Carousel slide 3 — onboarding |
+| `docs/linkedin/architecture-diagram.png` | Hero / slide 1 — system overview |
+| `docs/linkedin/mtls-flow-diagram.png` | Slide 2 — authentication flow |
+| `docs/linkedin/mtls-success-screenshot.png` | Slide 3 — **real** server auth log |
+| `docs/linkedin/device-mtls-success-screenshot.png` | Slide 4 or hero — **real** BeagleBone JSON response |
+| `docs/linkedin/trust-onboarding-diagram.png` | Slide 5 — trust scoring |
 
 ---
 

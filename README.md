@@ -4,6 +4,14 @@ Certificate-based authentication for IoT devices using mutual TLS (mTLS). Handle
 
 Tested with a BeagleBone Black over USB Ethernet. The CLI and server are split so the same setup works for other device types (e.g. an IP camera via stunnel).
 
+**Proof of work:** verified on real hardware — see [docs/proof-of-work.md](docs/proof-of-work.md).
+
+<p align="center">
+  <img src="docs/linkedin/device-mtls-success-screenshot.png" alt="BeagleBone mTLS success — curl returns device identity JSON" width="700"/>
+  <br/>
+  <em>BeagleBone Black — mTLS authenticated API response</em>
+</p>
+
 ---
 
 ## Quick start
@@ -156,6 +164,7 @@ pki-project/
 | Doc | Contents |
 |-----|----------|
 | [test-log.md](docs/test-log.md) | Verification output from building and testing |
+| [proof-of-work.md](docs/proof-of-work.md) | BeagleBone hardware screenshots — mTLS proof |
 | [trust-scoring.md](docs/trust-scoring.md) | Scan + trust model |
 | [certificate-storage.md](docs/certificate-storage.md) | DB vs filesystem, key handling |
 | [database-migration.md](docs/database-migration.md) | Flat files → SQLite, bugs found along the way |

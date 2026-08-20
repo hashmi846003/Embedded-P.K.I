@@ -2,6 +2,8 @@
 
 Output from building and testing this project. Three rounds: the original flat-file version, the database-backed rebuild, and trust-gated onboarding.
 
+**Hardware proof (screenshots):** [proof-of-work.md](proof-of-work.md)
+
 ## Round 1 — Flat-File Version (superseded)
 
 Initial build used bash scripts + a `revoked.txt` flat file. Two issues found:
@@ -85,3 +87,24 @@ Added `cert_pem`, `key_path`, `algorithm` columns to `certificates`, and `certct
 | 3 | `certctl export backend-server` vs. the `.crt` file on disk | Byte-identical | ✅ `diff` produced no output |
 | 4 | `openssl x509` on the DB-exported cert | Parses as valid X.509 | ✅ correct subject, serial, validity dates |
 | 5 | Grep all `cert_pem` and `key_path` column content for `BEGIN ... PRIVATE KEY` | Zero matches | ✅ `0` |
+
+## Round 5 — BeagleBone Black Hardware Verification (proof of work)
+
+End-to-end test on real embedded hardware: BeagleBone Black at `192.168.7.2`, server at `192.168.7.1:4433`, device `bbb-device-01-4fcad7`.
+
+| # | Test | Expected | Actual |
+|---|---|---|---|
+| 1 | SCP cert + key + CA to device | Files in `~/certs/` | ✅ All three files transferred |
+| 2 | Start mTLS server | Listening on `:4433` | ✅ `mTLS backend listening on :4433` |
+| 3 | Device curl with client cert | `200` + identity JSON | ✅ JSON with matching serial |
+| 4 | Server log matches JSON serial | Same serial both sides | ✅ `589559860246012094737978509389740577822520449035` |
+
+### Server side
+
+![Server: SCP, server start, AUTHENTICATED log](linkedin/mtls-success-screenshot.png)
+
+### Device side
+
+![BeagleBone: curl with client cert and JSON response](linkedin/device-mtls-success-screenshot.png)
+
+Full write-up: [proof-of-work.md](proof-of-work.md)
