@@ -1,0 +1,6 @@
+# Generated certs, keys, and the certificate database — regenerate with:
+#   certctl init-ca && certctl issue ...
+certs/
+data/
+*.key
+*.db
