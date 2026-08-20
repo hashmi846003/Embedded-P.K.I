@@ -160,3 +160,4 @@ pki-project/
 | [certificate-storage.md](docs/certificate-storage.md) | DB vs filesystem, key handling |
 | [database-migration.md](docs/database-migration.md) | Flat files → SQLite, bugs found along the way |
 | [ip-camera-stunnel.md](docs/ip-camera-stunnel.md) | Devices without native TLS |
+| [linkedin/LINKEDIN-DOCUMENTATION.md](docs/linkedin/LINKEDIN-DOCUMENTATION.md) | LinkedIn post text, diagrams, project overview |
